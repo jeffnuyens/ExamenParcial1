@@ -53,10 +53,10 @@ print(broadcasting)
     ## [4,]    4    8   12   16   20
     ## [5,]    5   10   15   20   25
 
-\*3. ¿Qué es el axioma de elegibilidad y por qué es útil al momento de
-hacer análisis de datos? Respuesta: Es un axioma que postula que para
-cada familia de conjuntos no vacíos, existe otro conjunto que contiene
-un elemento de cada una de esas familias.
+3.  ¿Qué es el axioma de elegibilidad y por qué es útil al momento de
+    hacer análisis de datos? Respuesta: Es un axioma que postula que
+    para cada familia de conjuntos no vacíos, existe otro conjunto que
+    contiene un elemento de cada una de esas familias.
 
 4.  Cuál es la relación entre la granularidad y la agregación de datos?
     Mencione un breve ejemplo. Luego, explique cuál es la granularidad o
@@ -241,7 +241,7 @@ print(cliente_mas_rentable)
     ## 1 a17a7558      19818.
 
 Respuesta: El cliente a17a7558 es el más rentable porque representa la
-mayor cantidad de ventas, 19817.7.
+mayor cantidad de ventas, 19817.7
 
 ## B
 
@@ -270,28 +270,36 @@ print(promedio_ventas_por_territorio)
     ## # ℹ 94 more rows
 
 ``` r
-library(dplyr)
-
-# Cargamos el data set
-data <- readRDS("parcial_anonimo.rds")
-
 # Calculamos la suma de ventas por territorio
-ventas_por_territorio <- data %>%
+ventas_por_territorio <- data_parcial %>%
   group_by(Territorio) %>%
   summarise(Venta_Total = sum(Venta, na.rm = TRUE))
 
-# Identificamos los territorios con pérdidas considerables 
-# (usaremos un umbral arbitrario para este ejemplo)
-minimo_perdida <- 100
+# Territorios con pérdidas considerables 
+# Suponemos que las pérdidas serán aquellas menoras a 10,000. 
+# Se supone está cantidad, ya que para la empresa no sería rentable seguir operando en territorios que generen menos que esa cantidad mínima. 
+minimo_perdida <- 10000
 territorios_con_perdidas <- ventas_por_territorio %>%
   filter(Venta_Total < minimo_perdida)
 
-# Imprimimos los resultados
 print(territorios_con_perdidas)
 ```
 
-    ## # A tibble: 2 × 2
-    ##   Territorio Venta_Total
-    ##   <chr>            <dbl>
-    ## 1 13b223c9          49.9
-    ## 2 e6fd9da9          18.2
+    ## # A tibble: 47 × 2
+    ##    Territorio Venta_Total
+    ##    <chr>            <dbl>
+    ##  1 0320288f         845. 
+    ##  2 0bbe6418        8892. 
+    ##  3 0bfe69a0         384. 
+    ##  4 0f915ffc        3260. 
+    ##  5 13b223c9          49.9
+    ##  6 1a9b2b4c        6437. 
+    ##  7 1e107bf6        2311. 
+    ##  8 1fac8d59        1182. 
+    ##  9 3153c73e        9574. 
+    ## 10 368301e2         121. 
+    ## # ℹ 37 more rows
+
+Respuesta: Suponemos que las pérdidas serán aquellas menoras a 10,000.
+Se supone está cantidad, ya que para la empresa no sería rentable seguir
+operando en territorios que generen menos que esa cantidad mínima.

@@ -150,7 +150,7 @@ cliente_mas_rentable <- ventas_por_cliente %>%
 print(cliente_mas_rentable)
 ```
 
-Respuesta: El cliente a17a7558 es el más rentable porque representa la mayor cantidad de ventas, 19817.7. 
+Respuesta: El cliente a17a7558 es el más rentable porque representa la mayor cantidad de ventas, 19817.7 
 
 ## B
 
@@ -171,13 +171,14 @@ ventas_por_territorio <- data_parcial %>%
   group_by(Territorio) %>%
   summarise(Venta_Total = sum(Venta, na.rm = TRUE))
 
-# Identificamos los territorios con pérdidas considerables 
-# (usaremos un umbral arbitrario para este ejemplo)
-minimo_perdida <- 100
+# Territorios con pérdidas considerables 
+# Suponemos que las pérdidas serán aquellas menoras a 10,000. 
+# Se supone está cantidad, ya que para la empresa no sería rentable seguir operando en territorios que generen menos que esa cantidad mínima. 
+minimo_perdida <- 10000
 territorios_con_perdidas <- ventas_por_territorio %>%
   filter(Venta_Total < minimo_perdida)
 
 print(territorios_con_perdidas)
 
 ```
-
+Respuesta: Suponemos que las pérdidas serán aquellas menoras a 10,000. Se supone está cantidad, ya que para la empresa no sería rentable seguir operando en territorios que generen menos que esa cantidad mínima. 
