@@ -56,7 +56,13 @@ print(broadcasting)
 3.  ¿Qué es el axioma de elegibilidad y por qué es útil al momento de
     hacer análisis de datos? Respuesta: Es un axioma que postula que
     para cada familia de conjuntos no vacíos, existe otro conjunto que
-    contiene un elemento de cada una de esas familias.
+    contiene un elemento de cada una de esas familias. Esta axioma es
+    útil en análisis de datos porque facilita el manejo de muchas
+    muestras y problemas de optimización en contextos más generales y
+    abstractos. También, permite definir funciones y estructuras (como
+    bases en espacios vectoriales) que serían imposibles de definir sin
+    este axioma, ayudando así en el desarrollo de métodos avanzados de
+    análisis.
 
 4.  Cuál es la relación entre la granularidad y la agregación de datos?
     Mencione un breve ejemplo. Luego, explique cuál es la granularidad o
@@ -246,60 +252,31 @@ mayor cantidad de ventas, 19817.7
 ## B
 
 ``` r
-# Promedio de ventas por territorio
-promedio_ventas_por_territorio <- data_parcial %>%
+#Ventas negativcas
+ventas_negativas <- data_parcial %>%
+  filter(Venta < 0) %>%
   group_by(Territorio) %>%
-  summarise(Promedio_Venta = mean(Venta, na.rm = TRUE))
+  summarise(perdidas_totales = sum(Venta, na.rm = TRUE), 
+            ventas_negativas = n()) %>%
+  filter(ventas_negativas > 10)
 
-print(promedio_ventas_por_territorio)
+print(ventas_negativas)
 ```
 
-    ## # A tibble: 104 × 2
-    ##    Territorio Promedio_Venta
-    ##    <chr>               <dbl>
-    ##  1 002da6aa            48.3 
-    ##  2 0320288f             7.98
-    ##  3 0bbe6418            15.8 
-    ##  4 0bfe69a0             5.82
-    ##  5 0c169a3b            35.8 
-    ##  6 0dd30fcd            21.5 
-    ##  7 0ef0ce97            21.1 
-    ##  8 0f915ffc             7.82
-    ##  9 11676773            17.4 
-    ## 10 13b223c9             8.32
-    ## # ℹ 94 more rows
+    ## # A tibble: 41 × 3
+    ##    Territorio perdidas_totales ventas_negativas
+    ##    <chr>                 <dbl>            <int>
+    ##  1 0bbe6418              -218.               11
+    ##  2 0c169a3b             -1171.               59
+    ##  3 0dd30fcd              -479                20
+    ##  4 0ef0ce97              -348.               16
+    ##  5 1c81fb6c              -481.               25
+    ##  6 1d407777             -3300.              129
+    ##  7 23e9d55d              -765.               43
+    ##  8 2e812869             -3056.              149
+    ##  9 3cae948b              -626.               24
+    ## 10 45c0376d              -475.               19
+    ## # ℹ 31 more rows
 
-``` r
-# Calculamos la suma de ventas por territorio
-ventas_por_territorio <- data_parcial %>%
-  group_by(Territorio) %>%
-  summarise(Venta_Total = sum(Venta, na.rm = TRUE))
-
-# Territorios con pérdidas considerables 
-# Suponemos que las pérdidas serán aquellas menoras a 10,000. 
-# Se supone está cantidad, ya que para la empresa no sería rentable seguir operando en territorios que generen menos que esa cantidad mínima. 
-minimo_perdida <- 10000
-territorios_con_perdidas <- ventas_por_territorio %>%
-  filter(Venta_Total < minimo_perdida)
-
-print(territorios_con_perdidas)
-```
-
-    ## # A tibble: 47 × 2
-    ##    Territorio Venta_Total
-    ##    <chr>            <dbl>
-    ##  1 0320288f         845. 
-    ##  2 0bbe6418        8892. 
-    ##  3 0bfe69a0         384. 
-    ##  4 0f915ffc        3260. 
-    ##  5 13b223c9          49.9
-    ##  6 1a9b2b4c        6437. 
-    ##  7 1e107bf6        2311. 
-    ##  8 1fac8d59        1182. 
-    ##  9 3153c73e        9574. 
-    ## 10 368301e2         121. 
-    ## # ℹ 37 more rows
-
-Respuesta: Suponemos que las pérdidas serán aquellas menoras a 10,000.
-Se supone está cantidad, ya que para la empresa no sería rentable seguir
-operando en territorios que generen menos que esa cantidad mínima.
+Respuesta: Suponemos que la empresa no tolerará aquellos territorios con
+ventas negativas mayores a 10 ventas.

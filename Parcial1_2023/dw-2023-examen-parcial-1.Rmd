@@ -38,7 +38,7 @@ print(broadcasting)
 ```
 
 3. ¿Qué es el axioma de elegibilidad y por qué es útil al momento de hacer análisis de datos? 
-Respuesta: Es un axioma que postula que para cada familia de conjuntos no vacíos, existe otro conjunto que contiene un elemento de cada una de esas familias.  
+Respuesta: Es un axioma que postula que para cada familia de conjuntos no vacíos, existe otro conjunto que contiene un elemento de cada una de esas familias. Esta axioma es útil en análisis de datos porque facilita el manejo de muchas muestras y problemas de optimización en contextos más generales y abstractos. También, permite definir funciones y estructuras (como bases en espacios vectoriales) que serían imposibles de definir sin este axioma, ayudando así en el desarrollo de métodos avanzados de análisis.
 
 4. Cuál es la relación entre la granularidad y la agregación de datos? Mencione un breve ejemplo. Luego, explique cuál es la granularidad o agregación requerida para poder generar un reporte como el siguiente:
 Respuesta: La granularidad es el nivel de detalle en un conjunto de datos. La agregación es el proceso de combinar varios datos en uno solo para reducir esa granularidad. Por ejemplo, al sumar las ventas diarias para obtener un total mensual, estamos aumentando el nivel de agregación porque estamos combinando el total de ventas diarias, y reduciendo la granularidad de los datos porque estamos reduciendo qué tan detallado es nuestro conjunto de datos y reduciéndolo solo a un total mensual. 
@@ -155,30 +155,17 @@ Respuesta: El cliente a17a7558 es el más rentable porque representa la mayor ca
 ## B
 
 ```{r, cache=TRUE}
-# Promedio de ventas por territorio
-promedio_ventas_por_territorio <- data_parcial %>%
+
+#Ventas negativcas
+ventas_negativas <- data_parcial %>%
+  filter(Venta < 0) %>%
   group_by(Territorio) %>%
-  summarise(Promedio_Venta = mean(Venta, na.rm = TRUE))
+  summarise(perdidas_totales = sum(Venta, na.rm = TRUE), 
+            ventas_negativas = n()) %>%
+  filter(ventas_negativas > 10)
 
-print(promedio_ventas_por_territorio)
-
+print(ventas_negativas)
 ```
 
 
-```{r, cache=TRUE}
-# Calculamos la suma de ventas por territorio
-ventas_por_territorio <- data_parcial %>%
-  group_by(Territorio) %>%
-  summarise(Venta_Total = sum(Venta, na.rm = TRUE))
-
-# Territorios con pérdidas considerables 
-# Suponemos que las pérdidas serán aquellas menoras a 10,000. 
-# Se supone está cantidad, ya que para la empresa no sería rentable seguir operando en territorios que generen menos que esa cantidad mínima. 
-minimo_perdida <- 10000
-territorios_con_perdidas <- ventas_por_territorio %>%
-  filter(Venta_Total < minimo_perdida)
-
-print(territorios_con_perdidas)
-
-```
-Respuesta: Suponemos que las pérdidas serán aquellas menoras a 10,000. Se supone está cantidad, ya que para la empresa no sería rentable seguir operando en territorios que generen menos que esa cantidad mínima. 
+Respuesta: Suponemos que la empresa no tolerará aquellos territorios con ventas negativas mayores a 10 ventas. 
